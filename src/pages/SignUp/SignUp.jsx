@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import PasswordInput from '../../components/PasswordInput';
 import { useState } from 'react';
 import axiosInstance from '../../utils/axiosInstance';
+import toast from 'react-hot-toast';
 
 const SignUp = () => {
   const [error, setError] = useState('');
@@ -42,6 +43,7 @@ const SignUp = () => {
       if (response.data && response.data.accessToken) {
         setLoading(false);
         // localStorage.setItem('token', response.data.accessToken);
+        toast.success('Registered Successfully. Please log in.');
         navigate('/login');
       }
     } catch (err) {
