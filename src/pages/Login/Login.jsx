@@ -2,11 +2,12 @@ import Navbar from '../../components/Navbar';
 import { Link, useNavigate } from 'react-router-dom';
 import PasswordInput from '../../components/PasswordInput';
 import * as Yup from 'yup';
-import classNames from 'classnames';
+// import classNames from 'classnames';
 import { useFormik } from 'formik';
 import axiosInstance from '../../utils/axiosInstance';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { Button } from '@nextui-org/react';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -21,8 +22,7 @@ const Login = () => {
       .min(8, 'Password must be at least 8 characters'),
   });
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     setLoading(true);
 
     try {
@@ -88,8 +88,18 @@ const Login = () => {
               <p className="text-red-500 text-xs pb-4">{errors.password}</p>
             )}
             {error && <p className="text-red-500 text-xs pb-4">{error}</p>}
+            <Button
+              type="submit"
+              isDisabled={isDisabled || loading}
+              onPress={handleLogin}
+              isLoading={loading}
+              color="primary"
+              fullWidth
+            >
+              {loading ? 'Loading' : 'Login'}
+            </Button>
 
-            <button
+            {/* <button
               type="submit"
               disabled={isDisabled || loading}
               onClick={handleLogin}
@@ -101,7 +111,7 @@ const Login = () => {
             >
               {loading && 'Loading...'}
               {!loading && 'Login'}
-            </button>
+            </button> */}
             <p className="text-sm text-center mt-4">
               Not registered yet?{' '}
               <Link to="/signup" className="font-medium text-primary underline">

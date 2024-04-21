@@ -11,6 +11,7 @@ import EditUser from '../EditUser';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import axiosInstance from '../../utils/axiosInstance';
+import ChangePassword from '../ChangePassword';
 
 const EditUserModal = ({
   isModalOpen,
@@ -25,8 +26,10 @@ const EditUserModal = ({
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleUserUpdate = async () => {
+    setLoading(true);
     try {
       const newUserDetail = {
         fullName: newName,
@@ -45,10 +48,14 @@ const EditUserModal = ({
       toast.error(
         'Error occurred updating the user details. Please try again.'
       );
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleChangePassword = async () => {
+    setLoading(true);
+
     try {
       const response = await axiosInstance.put('api/users/changePassword', {
         password: newPassword,
@@ -60,6 +67,8 @@ const EditUserModal = ({
       }
     } catch (error) {
       toast.error('Error occurred updating the password. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,6 +79,8 @@ const EditUserModal = ({
     : newPassword === '' ||
       confirmNewPassword === '' ||
       newPassword !== confirmNewPassword;
+
+  // console.log(loading);
   return (
     <Modal isOpen={isModalOpen} onOpenChange={onOpenChange}>
       <ModalContent>
@@ -79,29 +90,36 @@ const EditUserModal = ({
               {isChangeUserDetails ? 'Edit User Details' : 'Change Password'}
             </ModalHeader>
             <ModalBody>
-              <EditUser
-                fieldOne={isChangeUserDetails ? newName : newPassword}
-                setFieldOne={isChangeUserDetails ? setNewName : setNewPassword}
-                fieldTwo={isChangeUserDetails ? newEmail : confirmNewPassword}
-                setFieldTwo={
-                  isChangeUserDetails ? setNewEmail : setConfirmNewPassword
-                }
-                isChangeUserDetails={isChangeUserDetails}
-              />
+              {isChangeUserDetails ? (
+                <EditUser
+                  newName={newName}
+                  setNewName={setNewName}
+                  newEmail={newEmail}
+                  setNewEmail={setNewEmail}
+                />
+              ) : (
+                <ChangePassword
+                  newPassword={newPassword}
+                  setNewPassword={setNewPassword}
+                  confirmNewPassword={confirmNewPassword}
+                  setConfirmNewPassword={setConfirmNewPassword}
+                />
+              )}
             </ModalBody>
             <ModalFooter>
               <Button color="warning" onPress={onClose}>
                 Close
               </Button>
               <Button
-                isDisabled={isButtonDisabled}
-                onClick={() => {
+                isLoading={loading}
+                isDisabled={isButtonDisabled || loading}
+                onPress={() => {
                   if (isChangeUserDetails) {
                     handleUserUpdate();
                   } else {
                     handleChangePassword();
                   }
-                  onClose();
+                  // onClose();
                 }}
                 color="primary"
               >

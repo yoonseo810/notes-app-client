@@ -6,7 +6,7 @@ import { Toaster } from 'react-hot-toast';
 
 const routes = (
   <Router>
-    <Toaster position="top-center" />
+    <Toaster position="top-left" />
     <Routes>
       <Route path="/" exact element={<Home />} />
       <Route path="/login" exact element={<Login />} />

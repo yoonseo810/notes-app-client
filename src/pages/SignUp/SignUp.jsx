@@ -1,12 +1,13 @@
 import Navbar from '../../components/Navbar';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import classNames from 'classnames';
+// import classNames from 'classnames';
 import { Link, useNavigate } from 'react-router-dom';
 import PasswordInput from '../../components/PasswordInput';
 import { useState } from 'react';
 import axiosInstance from '../../utils/axiosInstance';
 import toast from 'react-hot-toast';
+import { Button } from '@nextui-org/react';
 
 const SignUp = () => {
   const [error, setError] = useState('');
@@ -28,8 +29,8 @@ const SignUp = () => {
       .oneOf([Yup.ref('password')], 'Passwords must match'),
   });
 
-  const handleSignUp = async (e) => {
-    e.preventDefault();
+  const handleSignUp = async () => {
+    // e.preventDefault();
 
     setLoading(true);
 
@@ -124,7 +125,17 @@ const SignUp = () => {
               </p>
             )}
             {error && <p className="text-red-500 text-xs pb-4">{error}</p>}
-            <button
+            <Button
+              type="submit"
+              isDisabled={isDisabled || loading}
+              onPress={handleSignUp}
+              isLoading={loading}
+              color="primary"
+              fullWidth
+            >
+              {loading ? 'Loading' : 'Create Account'}
+            </Button>
+            {/* <button
               type="submit"
               disabled={isDisabled || loading}
               onClick={handleSignUp}
@@ -135,7 +146,7 @@ const SignUp = () => {
               )}
             >
               {loading ? 'Loading...' : 'Create Account'}
-            </button>
+            </button> */}
             <p className="text-sm text-center mt-4">
               Already have an account?{' '}
               <Link to="/login" className="font-medium text-primary underline">

@@ -6,6 +6,7 @@ import {
   PopoverContent,
   Button,
 } from '@nextui-org/react';
+import { useState } from 'react';
 
 const ProfileInfo = ({
   userInfo,
@@ -13,9 +14,14 @@ const ProfileInfo = ({
   onChangeDetails,
   setUpdateMode,
 }) => {
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   return (
     <div className="flex items-center gap-3">
-      <Popover placement="left">
+      <Popover
+        isOpen={isPopoverOpen}
+        onOpenChange={(open) => setIsPopoverOpen(open)}
+        placement="left"
+      >
         <PopoverTrigger>
           <div className="cursor-pointer w-12 h-12 flex items-center justify-center rounded-full text-slate-950 font-medium bg-slate-100">
             {getInitials(userInfo?.fullName)}
@@ -30,6 +36,7 @@ const ProfileInfo = ({
               onClick={() => {
                 setUpdateMode('user');
                 onChangeDetails();
+                setIsPopoverOpen(!isPopoverOpen);
               }}
             >
               Change Details
@@ -39,6 +46,7 @@ const ProfileInfo = ({
               onClick={() => {
                 setUpdateMode('password');
                 onChangeDetails();
+                setIsPopoverOpen(!isPopoverOpen);
               }}
             >
               Change Password

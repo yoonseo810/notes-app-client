@@ -25,10 +25,20 @@ const Home = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [allNotes, setAllNotes] = useState([]);
 
+  // const [view, setView] = useState(new Set(['card']));
+
+  // const selectedValue = useMemo(
+  //   () => Array.from(view).join(', ').replaceAll('_', ''),
+  //   [view]
+  // );
+  const [getNotesLoading, setGetNotesLoading] = useState(false);
+  const [getUserLoading, setGetUserLoading] = useState(false);
+
   const [isSearch, setIsSearch] = useState(false);
   const navigate = useNavigate();
 
   const getAllNotes = async () => {
+    setGetNotesLoading(true);
     try {
       const response = await axiosInstance.get('/api/notes/all');
       if (response.data && response.data.notes) {
@@ -38,11 +48,14 @@ const Home = () => {
       toast.error('Please log in first', {
         id: 'login',
       });
+    } finally {
+      setGetNotesLoading(false);
     }
   };
 
   useEffect(() => {
     const getUserInfo = async () => {
+      setGetUserLoading(true);
       try {
         const response = await axiosInstance('/api/users/getUser');
         if (response.data && response.data.user) {
@@ -53,6 +66,8 @@ const Home = () => {
           localStorage.clear();
           navigate('/login');
         }
+      } finally {
+        setGetUserLoading(false);
       }
     };
     getUserInfo();
@@ -141,9 +156,12 @@ const Home = () => {
         handleClearSearch={handleClearSearch}
         onChangeDetails={onOpen}
         setUpdateMode={setUpdateMode}
+        getUserLoading={getUserLoading}
+        // view={view}
+        // setView={setView}
       />
       <div className="container mx-auto">
-        {allNotes?.length > 0 ? (
+        {!getNotesLoading && allNotes?.length > 0 ? (
           <div className="grid grid-cols-3 gap-4 mt-8">
             {allNotes.map((note) => (
               <NoteCard
@@ -163,7 +181,6 @@ const Home = () => {
           <EmptyCard isSearch={isSearch} />
         )}
       </div>
-
       <button
         className="w-16 h-16 flex items-center justify-center rounded-2xl bg-primary hover:bg-blue-600 absolute right-10 bottom-10"
         onClick={() => {

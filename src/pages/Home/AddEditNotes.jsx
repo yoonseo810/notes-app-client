@@ -4,9 +4,10 @@ import PropTypes from 'prop-types';
 import { MdClose } from 'react-icons/md';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import classNames from 'classnames';
+// import classNames from 'classnames';
 import axiosInstance from '../../utils/axiosInstance';
 import toast from 'react-hot-toast';
+import { Button } from '@nextui-org/react';
 
 const AddEditNotes = ({ noteData, type, onClose, getAllNotes }) => {
   const [error, setError] = useState('');
@@ -127,7 +128,17 @@ const AddEditNotes = ({ noteData, type, onClose, getAllNotes }) => {
         <label className="input-label">TAGS</label>
         <TagInput tags={tags} setTags={setTags} />
       </div>
-      <button
+      <Button
+        onPress={handleAddNote}
+        className="mt-5 p-3"
+        isDisabled={isDisabled || loading}
+        isLoading={loading}
+        color="primary"
+        fullWidth
+      >
+        {loading ? 'Loading' : type === 'edit' ? 'UPDATE' : 'ADD'}
+      </Button>
+      {/* <button
         disabled={isDisabled || loading}
         className={classNames(
           'btn-primary font-medium mt-5 p-3',
@@ -137,7 +148,7 @@ const AddEditNotes = ({ noteData, type, onClose, getAllNotes }) => {
         onClick={handleAddNote}
       >
         {loading ? 'Loading...' : type === 'edit' ? 'UPDATE' : 'ADD'}
-      </button>
+      </button> */}
       {error && <p className="text-red-500 text-xs pb-4">{error}</p>}
     </div>
   );
