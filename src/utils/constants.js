@@ -1,1 +1,1 @@
-export const BASE_URL = 'https://giddy-tan-shirt.cyclic.app';
+export const BASE_URL = 'https://notes-app-server-swart.vercel.app';
